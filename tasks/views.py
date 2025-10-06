@@ -1,30 +1,42 @@
-import time
-
+from django.db.models import F
 from django.http import JsonResponse
 from django.shortcuts import render
+from django_celery_results.models import TaskResult
+
+from .tasks import short_task, long_task
 
 
 def index_view(request):
-    return render(request, "tasks/index.html")
+    task_results = TaskResult.objects.annotate(
+        duration=F("date_done") - F("date_created")
+    )
+
+    return render(
+        request,
+        "tasks/index.html",
+        {
+            "task_results": task_results,
+        },
+    )
 
 
 def short_task_view(request):
-    # Simulate a short running task
-    time.sleep(5)
+    task = short_task.delay()
 
     return JsonResponse(
         {
-            "message": "Short task completed successfully.",
+            "message": "Short task has been started.",
+            "task_id": task.id,
         }
     )
 
 
 def long_task_view(request):
-    # Simulate a long-running task
-    time.sleep(10)
+    task = long_task.delay()
 
     return JsonResponse(
         {
-            "message": "Long task completed successfully.",
+            "message": "Long task has been started.",
+            "task_id": task.id,
         }
     )

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "tasks",
+    "tasks.apps.TasksConfig",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,18 @@ DATABASES = {
 }
 
 
+# Celery
+# https://docs.celeryq.dev/en/latest/userguide/configuration.html
+
+CELERY_BROKER_URL = f"redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "default"
+
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_PUBLISH_RETRY = True
+CELERY_RESULT_EXTENDED = True
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -116,6 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
