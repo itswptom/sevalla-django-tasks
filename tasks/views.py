@@ -7,17 +7,22 @@ from .tasks import short_task, long_task
 
 
 def index_view(request):
-    task_results = TaskResult.objects.annotate(
-        duration=F("date_done") - F("date_created")
-    )
+       task_results = TaskResult.objects.annotate(
+           duration=F("date_done") - F("date_created")
+       )
 
-    return render(
-        request,
-        "tasks/index.html",
-        {
-            "task_results": task_results,
-        },
-    )
+       total = task_results.count()
+       success = task_results.filter(status="SUCCESS").count()
+       success_rate = success / total  # regression: divides by zero when total == 0
+
+       return render(
+           request,
+           "tasks/index.html",
+           {
+               "task_results": task_results,
+               "success_rate": success_rate,
+           },
+       )
 
 
 def short_task_view(request):
