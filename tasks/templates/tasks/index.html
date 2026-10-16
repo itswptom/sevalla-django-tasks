@@ -28,6 +28,14 @@
                     <i class="bi bi-arrow-repeat"></i>
                 </button>
             </div>
+
+            <div class="alert alert-info">
+                <strong>{{ stats.total }}</strong> finished tasks &middot;
+                <strong>{{ stats.success_rate }}%</strong> success rate &middot;
+                source: <strong>{{ stats.source }}</strong> &middot;
+                computed at {{ stats.computed_at }}
+            </div>
+            
             {% if not task_results %}
                 <div class="alert alert-warning">
                     <p>No tasks found. Either:</p>
